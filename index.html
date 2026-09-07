@@ -4,20 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#7c3aed" />
-  <meta name="description" content="A little Italian speaking app made with love." />
+  <meta name="description" content="A little Italian speaking app made with love for Shazzy." />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Italiano con Freddy ❤️</title>
+  <title>Italiano con Shazzy ❤️</title>
 </head>
 <body>
   <main class="app-shell">
     <header class="hero card">
       <div>
-        <p class="eyebrow">A little Italian coach made with love</p>
-        <h1>Italiano con Freddy ❤️</h1>
-        <p class="sub">Speak real Italian, one tiny phrase at a time.</p>
+        <p class="eyebrow">Per Shazzy, il mio amore ❤️</p>
+        <h1>Italiano con Shazzy 🇮🇹</h1>
+        <p class="sub">A little Italian world from Freddy — one phrase, one laugh and one kiss at a time.</p>
       </div>
       <button id="installBtn" class="ghost-btn hidden" type="button">Add to phone</button>
     </header>
@@ -31,8 +31,8 @@
     <section class="card lesson-card">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Choose a mood</p>
-          <h2>Today’s phrases</h2>
+          <p class="eyebrow">Shazzy’s Italian</p>
+          <h2>Choose today’s mood</h2>
         </div>
         <span id="lessonCount" class="pill">1 / 6</span>
       </div>
@@ -61,7 +61,7 @@
     <section class="card mission-card">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Daily mission</p>
+          <p class="eyebrow">Shazzy’s daily mission</p>
           <h2>Say 5 phrases out loud</h2>
         </div>
         <span id="missionText" class="pill">0 / 5</span>
@@ -79,7 +79,7 @@
         <span id="quizCount" class="pill">1 / 5</span>
       </div>
       <div class="prompt-box">
-        <span>Freddy says:</span>
+        <span>Freddy asks Shazzy:</span>
         <strong id="quizPrompt">Buongiorno! Come stai?</strong>
       </div>
       <div id="answerList" class="answer-list"></div>
@@ -88,21 +88,32 @@
     </section>
 
     <section class="card date-card">
-      <p class="eyebrow">Date-night challenge ❤️</p>
+      <p class="eyebrow">Shazzy + Freddy challenge ❤️</p>
       <h2>Italian only for 5 minutes</h2>
       <p class="muted">Tap a rescue phrase to hear it.</p>
       <div id="rescueList" class="rescue-grid"></div>
     </section>
 
     <section class="card love-note">
-      <p class="eyebrow">From Freddy</p>
-      <p>“Non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te. ❤️”</p>
-      <small>You don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+      <p class="eyebrow">Un messaggio per Shazzy 💌</p>
+      <p>“Shazzy, amore mio, non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te. ❤️”</p>
+      <small>Shazzy, my love, you don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+    </section>
+
+    <section class="card love-note">
+      <p class="eyebrow">A tiny note from Freddy ❤️</p>
+      <h2>Shazzy’s secret phrase</h2>
+      <p class="muted">One little Italian message just for you.</p>
+      <button id="secretBtn" class="primary-btn" type="button">Reveal today’s message 💌</button>
+      <div id="secretNote" class="meaning hidden" aria-live="polite" style="margin-top:12px;margin-bottom:0">
+        <strong id="secretItalian"></strong>
+        <span id="secretEnglish" style="margin-top:6px"></span>
+      </div>
     </section>
 
     <footer>
       <button id="resetBtn" type="button" class="text-btn">Reset progress</button>
-      <p>Made for learning, laughing and speaking together 🇮🇹</p>
+      <p>Made with love for Shazzy — from Freddy ❤️🇮🇹</p>
     </footer>
   </main>
 

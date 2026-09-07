@@ -15,6 +15,16 @@ const lessons={
     ['Vieni qui, dammi un bacio.','Come here, give me a kiss.','VYEH-nee kwee • DAM-mee oon BAH-choh'],
     ['Andiamo a cena insieme?','Shall we go for dinner together?','an-DYAH-moh ah CHEH-nah een-SYEH-meh']
   ]},
+  us:{label:'Us',emoji:'🥰',items:[
+    ['Vieni qui, amore mio.','Come here, my love.','VYEH-nee kwee • ah-MOH-reh MEE-oh'],
+    ['Mi fai sorridere.','You make me smile.','mee fai sor-REE-deh-reh'],
+    ['Mi piace stare con te.','I like being with you.','mee PYAH-cheh STAH-reh con teh'],
+    ['Ti preparo un caffè?','Shall I make you a coffee?','tee preh-PAH-roh oon kaf-FEH'],
+    ['Facciamo una passeggiata insieme?','Shall we take a walk together?','fah-CHAH-moh OO-nah pas-sej-JAH-tah een-SYEH-meh'],
+    ['Un bacio, per favore.','A kiss, please.','oon BAH-choh • pehr fah-VOH-reh'],
+    ['Buonanotte, amore mio.','Good night, my love.','bwoh-nah-NOT-teh • ah-MOH-reh MEE-oh'],
+    ['Sono felice quando sono con te.','I am happy when I am with you.','SOH-noh feh-LEE-cheh KWAN-doh SOH-noh con teh']
+  ]},
   cafe:{label:'Caffè',emoji:'☕',items:[
     ['Vorrei un caffè, per favore.','I would like a coffee, please.','vor-RAY oon kaf-FEH • pehr fah-VOH-reh'],
     ['Quanto costa?','How much does it cost?','KWAN-toh KOS-tah'],
@@ -44,6 +54,15 @@ const rescue=[
   ['Come si dice in italiano?','How do you say it in Italian?'],
   ['Non ho capito.','I didn’t understand.'],
   ['Parla più lentamente, per favore.','Speak more slowly, please.']
+];
+const secretNotes=[
+  ['Sei il mio sorriso preferito.','You are my favourite smile.'],
+  ['Mi fai stare bene.','You make me feel good.'],
+  ['Con te, tutto è più bello.','With you, everything is more beautiful.'],
+  ['Voglio imparare e ridere con te.','I want to learn and laugh with you.'],
+  ['Un bacio per Shazzy.','A kiss for Shazzy.'],
+  ['Buongiorno, amore mio.','Good morning, my love.'],
+  ['Sei speciale per me.','You are special to me.']
 ];
 const defaultState={category:'basics',phraseIndex:0,quizIndex:0,points:0,spoken:0,mission:0,lastOpen:null,streak:1};
 let state=loadState();
@@ -101,7 +120,13 @@ function checkAnswer(index,button){
 function renderRescue(){
   const wrap=$('rescueList');wrap.innerHTML='';rescue.forEach(([it,en])=>{const b=document.createElement('button');b.type='button';b.className='rescue';b.innerHTML=`<strong>${it}</strong><span>${en}</span>`;b.addEventListener('click',()=>speak(it));wrap.appendChild(b)})
 }
-function renderAll(){renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue()}
+function renderSecret(){
+  const dayNumber=Math.floor(Date.now()/86400000);
+  const [it,en]=secretNotes[dayNumber%secretNotes.length];
+  $('secretItalian').textContent=it;
+  $('secretEnglish').textContent=en;
+}
+function renderAll(){renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderSecret()}
 
 $('hearBtn').addEventListener('click',()=>speak($('italianPhrase').textContent));
 $('revealBtn').addEventListener('click',()=>{const hidden=$('meaningPanel').classList.toggle('hidden');$('revealBtn').textContent=hidden?'Reveal meaning':'Hide meaning'});
@@ -112,5 +137,6 @@ $('resetBtn').addEventListener('click',()=>{if(confirm('Reset all progress?')){s
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.remove('hidden')});
 $('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.add('hidden')});
 window.addEventListener('appinstalled',()=>{$('installBtn').classList.add('hidden')});
+$('secretBtn').addEventListener('click',()=>{const hidden=$('secretNote').classList.toggle('hidden');$('secretBtn').textContent=hidden?'Reveal today’s message 💌':'Hide message';if(!hidden)speak($('secretItalian').textContent)});
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}))}
 updateStreak();renderAll();

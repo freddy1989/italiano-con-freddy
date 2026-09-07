@@ -1,4 +1,4 @@
-# Italiano con Freddy ❤️
+# Italiano con Shazzy ❤️
 
 A tiny installable Italian-learning web app made for your girlfriend.
 
@@ -24,7 +24,7 @@ cd italiano-con-freddy
 
 git init
 git add .
-git commit -m "Launch Italiano con Freddy"
+git commit -m "Launch Italiano con Shazzy"
 git branch -M main
 git remote add origin https://github.com/freddy1989/italiano-con-freddy.git
 git push -u origin main
