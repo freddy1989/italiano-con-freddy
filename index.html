@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#7c3aed" />
+  <meta name="description" content="A little Italian speaking app made with love." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Italiano con Freddy ❤️</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero card">
+      <div>
+        <p class="eyebrow">A little Italian coach made with love</p>
+        <h1>Italiano con Freddy ❤️</h1>
+        <p class="sub">Speak real Italian, one tiny phrase at a time.</p>
+      </div>
+      <button id="installBtn" class="ghost-btn hidden" type="button">Add to phone</button>
+    </header>
+
+    <section class="stats-grid">
+      <article class="stat card"><span>🔥 Streak</span><strong id="streakValue">1 day</strong></article>
+      <article class="stat card"><span>⭐ Points</span><strong id="pointsValue">0</strong></article>
+      <article class="stat card"><span>🗣️ Spoken</span><strong id="spokenValue">0</strong></article>
+    </section>
+
+    <section class="card lesson-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Choose a mood</p>
+          <h2>Today’s phrases</h2>
+        </div>
+        <span id="lessonCount" class="pill">1 / 6</span>
+      </div>
+
+      <div id="categoryTabs" class="tabs" aria-label="Lesson categories"></div>
+
+      <div class="phrase-wrap">
+        <p class="label">Say this</p>
+        <h3 id="italianPhrase">Ciao! Come stai?</h3>
+        <p id="pronunciation" class="pronunciation">chow • KOH-meh stai</p>
+      </div>
+
+      <div id="meaningPanel" class="meaning hidden" aria-live="polite">
+        <span>Meaning</span>
+        <strong id="englishPhrase">Hi! How are you?</strong>
+      </div>
+
+      <div class="action-grid">
+        <button id="hearBtn" class="primary-btn" type="button">🔊 Hear Italian</button>
+        <button id="revealBtn" class="secondary-btn" type="button">Reveal meaning</button>
+        <button id="saidBtn" class="secondary-btn" type="button">✓ I said it aloud</button>
+        <button id="nextPhraseBtn" class="primary-btn" type="button">Next phrase →</button>
+      </div>
+    </section>
+
+    <section class="card mission-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Daily mission</p>
+          <h2>Say 5 phrases out loud</h2>
+        </div>
+        <span id="missionText" class="pill">0 / 5</span>
+      </div>
+      <div class="progress-track" aria-label="Daily speaking mission progress"><div id="missionBar" class="progress-bar"></div></div>
+      <p class="muted">Don’t chase perfect grammar. Get comfortable making the sounds first.</p>
+    </section>
+
+    <section class="card quiz-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Mini conversation</p>
+          <h2>What would you say?</h2>
+        </div>
+        <span id="quizCount" class="pill">1 / 5</span>
+      </div>
+      <div class="prompt-box">
+        <span>Freddy says:</span>
+        <strong id="quizPrompt">Buongiorno! Come stai?</strong>
+      </div>
+      <div id="answerList" class="answer-list"></div>
+      <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+      <button id="nextQuizBtn" class="primary-btn hidden" type="button">Next conversation →</button>
+    </section>
+
+    <section class="card date-card">
+      <p class="eyebrow">Date-night challenge ❤️</p>
+      <h2>Italian only for 5 minutes</h2>
+      <p class="muted">Tap a rescue phrase to hear it.</p>
+      <div id="rescueList" class="rescue-grid"></div>
+    </section>
+
+    <section class="card love-note">
+      <p class="eyebrow">From Freddy</p>
+      <p>“Non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te. ❤️”</p>
+      <small>You don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+    </section>
+
+    <footer>
+      <button id="resetBtn" type="button" class="text-btn">Reset progress</button>
+      <p>Made for learning, laughing and speaking together 🇮🇹</p>
+    </footer>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
