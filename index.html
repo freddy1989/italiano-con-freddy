@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#7c3aed" />
-  <meta name="description" content="A little Italian speaking app made with love for Shazzy." />
+  <meta name="description" content="Italiano con Shazzy — a little Italian speaking app made with love by Freddy." />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -16,16 +16,41 @@
     <header class="hero card">
       <div>
         <p class="eyebrow">Per Shazzy, il mio amore ❤️</p>
-        <h1>Italiano con Shazzy 🇮🇹</h1>
-        <p class="sub">A little Italian world from Freddy — one phrase, one laugh and one kiss at a time.</p>
+        <h1>Ciao Shazzy 🇮🇹</h1>
+        <p id="welcomeLine" class="sub">Ready for a tiny bit of Italian with Freddy?</p>
       </div>
       <button id="installBtn" class="ghost-btn hidden" type="button">Add to phone</button>
     </header>
 
-    <section class="stats-grid">
+    <section class="stats-grid stats-four">
       <article class="stat card"><span>🔥 Streak</span><strong id="streakValue">1 day</strong></article>
       <article class="stat card"><span>⭐ Points</span><strong id="pointsValue">0</strong></article>
       <article class="stat card"><span>🗣️ Spoken</span><strong id="spokenValue">0</strong></article>
+      <article class="stat card"><span>🏆 Level</span><strong id="levelValue">Principiante</strong></article>
+    </section>
+
+    <section class="card level-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Shazzy’s journey</p>
+          <h2 id="levelTitle">Principiante 🌱</h2>
+        </div>
+        <span id="levelPoints" class="pill">0 / 50</span>
+      </div>
+      <div class="progress-track"><div id="levelBar" class="progress-bar"></div></div>
+      <p id="levelHint" class="muted">Every phrase counts. Next stop: Coraggiosa 💪</p>
+      <div id="badgeList" class="badge-list" aria-label="Achievements"></div>
+    </section>
+
+    <section class="card daily-love">
+      <p class="eyebrow">Messaggio dal tuo amore 💌</p>
+      <h2>Today’s love phrase</h2>
+      <p id="dailyLoveItalian" class="daily-italian">Sei il mio sorriso preferito.</p>
+      <p id="dailyLoveEnglish" class="muted hidden">You are my favourite smile.</p>
+      <div class="inline-actions">
+        <button id="dailyLoveHear" class="secondary-btn" type="button">🔊 Hear it</button>
+        <button id="dailyLoveReveal" class="primary-btn" type="button">Reveal meaning</button>
+      </div>
     </section>
 
     <section class="card lesson-card">
@@ -52,9 +77,14 @@
 
       <div class="action-grid">
         <button id="hearBtn" class="primary-btn" type="button">🔊 Hear Italian</button>
+        <button id="voiceBtn" class="secondary-btn" type="button">🎙️ Try saying it</button>
         <button id="revealBtn" class="secondary-btn" type="button">Reveal meaning</button>
         <button id="saidBtn" class="secondary-btn" type="button">✓ I said it aloud</button>
-        <button id="nextPhraseBtn" class="primary-btn" type="button">Next phrase →</button>
+        <button id="nextPhraseBtn" class="primary-btn wide-btn" type="button">Next phrase →</button>
+      </div>
+      <div id="voicePanel" class="voice-panel hidden" aria-live="polite">
+        <span id="voiceStatus">Listening…</span>
+        <strong id="voiceTranscript"></strong>
       </div>
     </section>
 
@@ -67,7 +97,7 @@
         <span id="missionText" class="pill">0 / 5</span>
       </div>
       <div class="progress-track" aria-label="Daily speaking mission progress"><div id="missionBar" class="progress-bar"></div></div>
-      <p class="muted">Don’t chase perfect grammar. Get comfortable making the sounds first.</p>
+      <p class="muted">Confidence first. Perfect grammar can wait.</p>
     </section>
 
     <section class="card quiz-card">
@@ -76,10 +106,10 @@
           <p class="eyebrow">Mini conversation</p>
           <h2>What would you say?</h2>
         </div>
-        <span id="quizCount" class="pill">1 / 5</span>
+        <span id="quizCount" class="pill">1 / 8</span>
       </div>
       <div class="prompt-box">
-        <span>Freddy asks Shazzy:</span>
+        <span>Freddy says:</span>
         <strong id="quizPrompt">Buongiorno! Come stai?</strong>
       </div>
       <div id="answerList" class="answer-list"></div>
@@ -90,30 +120,36 @@
     <section class="card date-card">
       <p class="eyebrow">Shazzy + Freddy challenge ❤️</p>
       <h2>Italian only for 5 minutes</h2>
-      <p class="muted">Tap a rescue phrase to hear it.</p>
+      <p class="muted">Tap a rescue phrase if you get stuck.</p>
       <div id="rescueList" class="rescue-grid"></div>
     </section>
 
-    <section class="card love-note">
-      <p class="eyebrow">Un messaggio per Shazzy 💌</p>
-      <p>“Shazzy, amore mio, non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te. ❤️”</p>
-      <small>Shazzy, my love, you don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+    <section class="card sardinia-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Bonus island chaos 🏝️</p>
+          <h2>Sardinian starter</h2>
+        </div>
+        <span class="pill">Bonus</span>
+      </div>
+      <p class="muted">Not Italian — a tiny Sardinian bonus from Freddy’s world. Spellings and usage can vary by area.</p>
+      <div class="sardinia-grid">
+        <button class="rescue sardinian" type="button" data-say="Ajò"><strong>Ajò!</strong><span>Come on / let’s go!</span></button>
+        <button class="rescue sardinian" type="button" data-say="Eja"><strong>Eja!</strong><span>Yes!</span></button>
+        <button class="rescue sardinian" type="button" data-say="Gratzias"><strong>Gratzias</strong><span>Thank you</span></button>
+      </div>
     </section>
 
     <section class="card love-note">
-      <p class="eyebrow">A tiny note from Freddy ❤️</p>
-      <h2>Shazzy’s secret phrase</h2>
-      <p class="muted">One little Italian message just for you.</p>
-      <button id="secretBtn" class="primary-btn" type="button">Reveal today’s message 💌</button>
-      <div id="secretNote" class="meaning hidden" aria-live="polite" style="margin-top:12px;margin-bottom:0">
-        <strong id="secretItalian"></strong>
-        <span id="secretEnglish" style="margin-top:6px"></span>
-      </div>
+      <p class="eyebrow">A note from Freddy ❤️</p>
+      <p>“Shazzy, amore mio, non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te.”</p>
+      <small>Shazzy, my love, you don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
     </section>
 
     <footer>
       <button id="resetBtn" type="button" class="text-btn">Reset progress</button>
       <p>Made with love for Shazzy — from Freddy ❤️🇮🇹</p>
+      <p class="tiny">V3</p>
     </footer>
   </main>
 

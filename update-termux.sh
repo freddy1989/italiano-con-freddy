@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -e
 
-echo "❤️ Updating Italiano con Shazzy..."
+echo "❤️ Updating Italiano con Shazzy V3..."
 
 if [ ! -d .git ]; then
   echo "This folder is not your existing Git repository."
@@ -13,9 +13,10 @@ git add .
 if git diff --cached --quiet; then
   echo "Nothing new to commit."
 else
-  git commit -m "feat: personalize Italian app for Shazzy"
+  git commit -m "feat: Shazzy V3 lessons voice levels badges"
   git push origin main
 fi
 
-echo "✅ Shazzy V2 pushed to GitHub."
+echo "✅ Shazzy V3 pushed to GitHub."
 echo "GitHub Pages should refresh automatically in a minute or two."
+echo "Open: https://freddy1989.github.io/italiano-con-freddy/?v=3"

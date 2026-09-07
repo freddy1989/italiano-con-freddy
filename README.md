@@ -1,47 +1,25 @@
-# Italiano con Shazzy ❤️
+# Italiano con Shazzy ❤️ — V3
 
-A tiny installable Italian-learning web app made for your girlfriend.
+A tiny installable Italian-learning web app made by Freddy for Shazzy.
 
-## Features
-- Mobile-first design
-- Italian speech playback using the phone/browser's Italian voice
-- Basics, love, cafe and everyday phrase packs
-- Mini conversation quizzes
-- Daily speaking mission
-- Local progress + streak saving
-- Installable PWA / home-screen app
-- Offline caching after the first visit
+V3 adds:
+- personalised daily greeting
+- daily love phrase from Freddy
+- 7 lesson packs including travel and date night
+- 8 mini-conversation quizzes
+- levels and achievements
+- experimental Italian voice practice on supported browsers
+- daily speaking mission and saved progress
+- small Sardinian bonus section
+- offline/PWA support
 
-## Fast GitHub Pages deployment from Termux
+## Update from Termux
+Unzip this package over the existing `italiano-con-freddy` folder, then run:
 
 ```bash
-pkg update -y
-pkg install git -y
-termux-setup-storage
-cd ~/storage/downloads
-unzip italiano-con-freddy.zip
-cd italiano-con-freddy
-
-git init
-git add .
-git commit -m "Launch Italiano con Shazzy"
-git branch -M main
-git remote add origin https://github.com/freddy1989/italiano-con-freddy.git
-git push -u origin main
+cd ~/storage/downloads/italiano-con-freddy
+bash update-termux.sh
 ```
 
-Then on GitHub:
-1. Open the repository.
-2. Settings -> Pages.
-3. Under Build and deployment choose **Deploy from a branch**.
-4. Branch: **main**, folder: **/(root)**.
-5. Save.
-
-GitHub will give you a public link such as:
-`https://freddy1989.github.io/italiano-con-freddy/`
-
-Send that link to her. On Android/Chrome she can use **Add to Home screen / Install app**.
-
-## Notes
-- Speech uses `speechSynthesis`, so the exact Italian voice depends on the phone/browser.
-- Progress is stored only on her device using localStorage.
+Live URL:
+https://freddy1989.github.io/italiano-con-freddy/
