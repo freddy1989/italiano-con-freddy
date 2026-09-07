@@ -138,5 +138,17 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPro
 $('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.add('hidden')});
 window.addEventListener('appinstalled',()=>{$('installBtn').classList.add('hidden')});
 $('secretBtn').addEventListener('click',()=>{const hidden=$('secretNote').classList.toggle('hidden');$('secretBtn').textContent=hidden?'Reveal today’s message 💌':'Hide message';if(!hidden)speak($('secretItalian').textContent)});
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}))}
+if('serviceWorker' in navigator){
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing)return;
+    refreshing=true;
+    window.location.reload();
+  });
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'})
+      .then(reg=>reg.update())
+      .catch(()=>{});
+  });
+}
 updateStreak();renderAll();
