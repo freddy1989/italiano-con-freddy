@@ -92,7 +92,19 @@ const practiceItems=[
   {en:'Where is the bathroom?',it:'Dov’è il bagno?',gap:'bagno'},
   {en:'Can I help?',it:'Posso aiutare?',gap:'aiutare'},
   {en:'Everything is delicious.',it:'È tutto buonissimo.',gap:'buonissimo'},
-  {en:'See you soon!',it:'A presto!',gap:'presto'}
+  {en:'See you soon!',it:'A presto!',gap:'presto'},
+  {en:'Can you repeat, please?',it:'Puoi ripetere, per favore?',gap:'ripetere'},
+  {en:'How do you say it in Italian?',it:'Come si dice in italiano?',gap:'italiano'},
+  {en:'Speak more slowly, please.',it:'Parla più lentamente, per favore.',gap:'lentamente'},
+  {en:'I like being with you.',it:'Mi piace stare con te.',gap:'piace'},
+  {en:'Shall I make you a coffee?',it:'Ti preparo un caffè?',gap:'caffè'},
+  {en:'What time does it leave?',it:'A che ora parte?',gap:'parte'},
+  {en:'Can you help me?',it:'Mi può aiutare?',gap:'aiutare'},
+  {en:'Let’s toast to us.',it:'Brindiamo a noi.',gap:'noi'},
+  {en:'Shall we go home together?',it:'Andiamo a casa insieme?',gap:'casa'},
+  {en:'Thank you for having me.',it:'Grazie per avermi ospitata.',gap:'ospitata'},
+  {en:'I had a lot of fun.',it:'Mi sono divertita molto.',gap:'divertita'},
+  {en:'See you later!',it:'A dopo!',gap:'dopo'}
 ];
 
 const rescue=[
@@ -286,20 +298,27 @@ function awardPractice(mode,index,points){
 function renderPracticeTabs(){
   document.querySelectorAll('.practice-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.practiceMode));
 }
+function effectivePracticeMode(){
+  if(state.practiceMode!=='mix')return state.practiceMode;
+  return ['write','gap','build'][state.practiceIndex%3];
+}
 function renderPractice(){
   const item=practiceItems[state.practiceIndex%practiceItems.length];
+  const mode=effectivePracticeMode();
   $('practiceCount').textContent=`${state.practiceIndex+1} / ${practiceItems.length}`;
   $('practiceFeedback').textContent='';$('practiceFeedback').className='feedback';
   $('practiceInput').value='';$('buildArea').classList.add('hidden');$('practiceInputArea').classList.remove('hidden');
   renderPracticeTabs();
-  if(state.practiceMode==='write'){
-    $('practiceInstruction').textContent='Translate into Italian';$('practicePrompt').textContent=item.en;
+  const title=$('practiceModeTitle');
+  if(title)title.textContent=state.practiceMode==='mix'?`Mix it up · ${mode==='write'?'Write it':mode==='gap'?'Missing word':'Build sentence'}`:(mode==='write'?'Write it':mode==='gap'?'Missing word':'Build sentence');
+  if(mode==='write'){
+    $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Translate into Italian':'Translate into Italian';$('practicePrompt').textContent=item.en;
     $('practiceInputLabel').textContent='Type the full Italian sentence';$('practiceInput').placeholder='Type in Italian…';
-  }else if(state.practiceMode==='gap'){
-    $('practiceInstruction').textContent='Type the missing Italian word';$('practicePrompt').textContent=gapPhrase(item);
+  }else if(mode==='gap'){
+    $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Type the missing word':'Type the missing Italian word';$('practicePrompt').textContent=gapPhrase(item);
     $('practiceInputLabel').textContent=`Hint: ${item.en}`;$('practiceInput').placeholder='Missing word…';
   }else{
-    $('practiceInstruction').textContent='Build this sentence in Italian';$('practicePrompt').textContent=item.en;
+    $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Build the sentence':'Build this sentence in Italian';$('practicePrompt').textContent=item.en;
     $('practiceInputArea').classList.add('hidden');$('buildArea').classList.remove('hidden');
     buildTokens=[];renderWordBank(item);
   }
@@ -327,13 +346,14 @@ function showPracticeFeedback(text,type){
 }
 function checkPractice(){
   const item=practiceItems[state.practiceIndex%practiceItems.length];
+  const mode=effectivePracticeMode();
   let answer='',target='',threshold=.9,points=12;
-  if(state.practiceMode==='write'){answer=$('practiceInput').value;target=item.it;threshold=.86;points=15;}
-  else if(state.practiceMode==='gap'){answer=$('practiceInput').value;target=item.gap;threshold=.9;points=10;}
+  if(mode==='write'){answer=$('practiceInput').value;target=item.it;threshold=.86;points=15;}
+  else if(mode==='gap'){answer=$('practiceInput').value;target=item.gap;threshold=.9;points=10;}
   else{answer=buildTokens.map(x=>x.w).join(' ');target=item.it;threshold=.98;points=12;}
   if(!normalizeItalian(answer)){showPracticeFeedback('Type or build an answer first 💜','bad');return}
   if(similarity(answer,target)>=threshold){
-    showPracticeFeedback('✅ Bravissima! '+item.it,'good');awardPractice(state.practiceMode,state.practiceIndex,points);speak(item.it);
+    showPracticeFeedback('✅ Bravissima! '+item.it,'good');awardPractice(mode,state.practiceIndex,points);speak(item.it);
   }else{
     showPracticeFeedback('Nearly — have another go, or tap “Show answer”.','bad');
   }
@@ -398,6 +418,17 @@ function scheduleReminderCheck(){
   };
   check();reminderTimer=setInterval(check,30000);
 }
+function showView(name){
+  document.querySelectorAll('.app-view').forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+  if(name==='progress')renderStats();
+  if(name==='practice')renderPractice();
+  if(name==='reminder')renderReminder();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setupNavigation(){
+  document.querySelectorAll('[data-open-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.openView)));
+  document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>showView('home')));
+}
 function renderAll(){renderWelcome();renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderDailyLove();renderPractice();renderReminder()}
 
 
@@ -444,4 +475,4 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;window.location.reload()});
   window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{})});
 }
-updateStreak();renderAll();scheduleReminderCheck();
+setupNavigation();updateStreak();renderAll();scheduleReminderCheck();

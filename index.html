@@ -17,229 +17,246 @@
       <div>
         <p class="eyebrow">Per Shazzy, il mio amore ❤️</p>
         <h1>Ciao Shazzy 🇮🇹</h1>
-        <p id="welcomeLine" class="sub">Listen, repeat, write and build a little Italian every day.</p>
+        <p id="welcomeLine" class="sub">A little Italian every day.</p>
       </div>
       <button id="installBtn" class="ghost-btn hidden" type="button">Add to phone</button>
     </header>
 
-    <section class="stats-grid stats-four">
-      <article class="stat card"><span>🔥 Streak</span><strong id="streakValue">1 day</strong></article>
-      <article class="stat card"><span>⭐ Points</span><strong id="pointsValue">0</strong></article>
-      <article class="stat card"><span>🗣️ Spoken</span><strong id="spokenValue">0</strong></article>
-      <article class="stat card"><span>🏆 Level</span><strong id="levelValue">Principiante</strong></article>
-    </section>
+    <section class="app-view active" data-view="home">
+      <section class="stats-grid stats-four">
+        <article class="stat card"><span>🔥 Streak</span><strong id="streakValue">1 day</strong></article>
+        <article class="stat card"><span>⭐ Points</span><strong id="pointsValue">0</strong></article>
+        <article class="stat card"><span>🗣️ Spoken</span><strong id="spokenValue">0</strong></article>
+        <article class="stat card"><span>🏆 Level</span><strong id="levelValue">Principiante</strong></article>
+      </section>
 
-    <section class="card level-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Shazzy’s journey</p>
-          <h2 id="levelTitle">Principiante 🌱</h2>
+      <section class="card daily-love home-love">
+        <p class="eyebrow">Messaggio dal tuo amore 💌</p>
+        <h2>Today’s love phrase</h2>
+        <p id="dailyLoveItalian" class="daily-italian">Sei il mio sorriso preferito.</p>
+        <p id="dailyLoveEnglish" class="muted hidden">You are my favourite smile.</p>
+        <div class="inline-actions">
+          <button id="dailyLoveHear" class="secondary-btn" type="button">🔊 Hear it</button>
+          <button id="dailyLoveReveal" class="primary-btn" type="button">Reveal meaning</button>
         </div>
-        <span id="levelPoints" class="pill">0 / 50</span>
-      </div>
-      <div class="progress-track"><div id="levelBar" class="progress-bar"></div></div>
-      <p id="levelHint" class="muted">Every phrase counts. Next stop: Coraggiosa 💪</p>
-      <div class="achievement-headline">
-        <strong id="achievementSummary">0 / 12 achievements</strong>
-        <span class="muted">Unlock them as you practise</span>
-      </div>
-      <div id="badgeList" class="badge-list" aria-label="Achievements"></div>
-    </section>
+      </section>
 
-
-
-    <section class="card score-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Points & achievements ⭐</p>
-          <h2>How Shazzy scores</h2>
+      <section class="card mission-card compact-mission">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Today’s mission</p>
+            <h2>Say 5 phrases out loud</h2>
+          </div>
+          <span id="missionText" class="pill">0 / 5</span>
         </div>
-        <span id="scoreTotalPill" class="pill">0 pts</span>
-      </div>
-      <div class="score-grid">
-        <div><strong>+5</strong><span>Say a phrase</span><small>First 5 each day</small></div>
-        <div><strong>+10</strong><span>Conversation</span><small>First correct answer</small></div>
-        <div><strong>+15</strong><span>Write it</span><small>First correct sentence</small></div>
-        <div><strong>+10</strong><span>Missing word</span><small>First correct answer</small></div>
-        <div><strong>+12</strong><span>Build sentence</span><small>First correct build</small></div>
-      </div>
-      <p class="tiny-note">Repeating an exercise is always useful, but points are awarded once per exercise so the score reflects progress rather than button tapping.</p>
-    </section>
-
-    <section class="card reminder-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Daily Italian reminder 🔔</p>
-          <h2>Pick Shazzy’s practice time</h2>
+        <div class="progress-track" aria-label="Daily speaking mission progress"><div id="missionBar" class="progress-bar"></div></div>
+        <div class="mission-row">
+          <span class="muted">Confidence first ❤️</span>
+          <button id="resetMissionBtn" type="button" class="text-btn">↻ Reset</button>
         </div>
-        <span id="reminderPill" class="pill">Off</span>
-      </div>
-      <div class="reminder-controls">
-        <label for="reminderTime">Remind me every day at</label>
-        <input id="reminderTime" type="time" value="19:00" />
-        <button id="saveReminderBtn" class="primary-btn" type="button">Save reminder</button>
-      </div>
-      <div class="reminder-actions">
-        <button id="notificationBtn" class="secondary-btn" type="button">🔔 Allow app notifications</button>
-        <button id="calendarReminderBtn" class="secondary-btn" type="button">📅 Add daily calendar reminder</button>
-        <button id="disableReminderBtn" class="text-btn" type="button">Turn reminder off</button>
-      </div>
-      <p id="reminderStatus" class="muted reminder-status" aria-live="polite">Choose a time and save it.</p>
-      <p class="tiny-note">For a reminder even when the web app is fully closed, add it to the phone calendar. Browser notifications are checked while the app is running.</p>
-    </section>
+      </section>
 
-    <section class="card daily-love">
-      <p class="eyebrow">Messaggio dal tuo amore 💌</p>
-      <h2>Today’s love phrase</h2>
-      <p id="dailyLoveItalian" class="daily-italian">Sei il mio sorriso preferito.</p>
-      <p id="dailyLoveEnglish" class="muted hidden">You are my favourite smile.</p>
-      <div class="inline-actions">
-        <button id="dailyLoveHear" class="secondary-btn" type="button">🔊 Hear it</button>
-        <button id="dailyLoveReveal" class="primary-btn" type="button">Reveal meaning</button>
-      </div>
-    </section>
-
-    <section class="card lesson-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Shazzy’s Italian</p>
-          <h2>Choose today’s mood</h2>
+      <section class="card home-menu-card">
+        <div class="section-head menu-heading">
+          <div>
+            <p class="eyebrow">What do you fancy?</p>
+            <h2>Choose something to practise</h2>
+          </div>
         </div>
-        <span id="lessonCount" class="pill">1 / 6</span>
-      </div>
-
-      <div id="categoryTabs" class="tabs" aria-label="Lesson categories"></div>
-
-      <div class="phrase-wrap">
-        <p class="label">Listen and repeat</p>
-        <h3 id="italianPhrase">Ciao! Come stai?</h3>
-        <p id="pronunciation" class="pronunciation">chow • KOH-meh stai</p>
-      </div>
-
-      <div id="meaningPanel" class="meaning hidden" aria-live="polite">
-        <span>Meaning</span>
-        <strong id="englishPhrase">Hi! How are you?</strong>
-      </div>
-
-      <div class="action-grid">
-        <button id="hearBtn" class="primary-btn" type="button">🔊 Hear Italian</button>
-        <button id="revealBtn" class="secondary-btn" type="button">Reveal meaning</button>
-        <button id="saidBtn" class="secondary-btn wide-btn" type="button">✓ I said it aloud</button>
-        <button id="nextPhraseBtn" class="primary-btn wide-btn" type="button">Next phrase →</button>
-      </div>
-      <p class="tiny-note">No microphone check for now — just listen, repeat and build confidence ❤️</p>
-    </section>
-
-    <section class="card mission-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Shazzy’s daily mission</p>
-          <h2>Say 5 phrases out loud</h2>
+        <div class="home-menu" aria-label="App menu">
+          <button class="menu-tile" type="button" data-open-view="learn">
+            <span class="menu-icon">📚</span><strong>Learn phrases</strong><small>Listen, repeat & reveal</small>
+          </button>
+          <button class="menu-tile" type="button" data-open-view="practice">
+            <span class="menu-icon">✍️</span><strong>Exercises</strong><small>Write, fill gaps & build</small>
+          </button>
+          <button class="menu-tile" type="button" data-open-view="conversation">
+            <span class="menu-icon">💬</span><strong>Conversations</strong><small>Choose the best reply</small>
+          </button>
+          <button class="menu-tile" type="button" data-open-view="progress">
+            <span class="menu-icon">🏆</span><strong>My progress</strong><small>Levels, points & badges</small>
+          </button>
+          <button class="menu-tile" type="button" data-open-view="reminder">
+            <span class="menu-icon">🔔</span><strong>Daily reminder</strong><small>Pick your practice time</small>
+          </button>
+          <button class="menu-tile" type="button" data-open-view="extras">
+            <span class="menu-icon">❤️</span><strong>Freddy extras</strong><small>Date night & Sardinia</small>
+          </button>
         </div>
-        <span id="missionText" class="pill">0 / 5</span>
-      </div>
-      <div class="progress-track" aria-label="Daily speaking mission progress"><div id="missionBar" class="progress-bar"></div></div>
-      <p class="muted">Confidence first. Perfect grammar can wait.</p>
-      <button id="resetMissionBtn" type="button" class="text-btn inline-reset">↻ Reset today’s challenge</button>
+      </section>
     </section>
 
-    <section class="card practice-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">New practice lab ✍️</p>
-          <h2>Make the Italian yourself</h2>
+    <section class="app-view" data-view="learn">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>📚 Learn phrases</span></div>
+      <section class="card lesson-card">
+        <div class="section-head">
+          <div><p class="eyebrow">Shazzy’s Italian</p><h2>Choose today’s mood</h2></div>
+          <span id="lessonCount" class="pill">1 / 6</span>
         </div>
-        <span id="practiceCount" class="pill">1 / 12</span>
-      </div>
-
-      <div class="practice-tabs" role="group" aria-label="Practice mode">
-        <button class="practice-tab active" type="button" data-mode="write">✍️ Write it</button>
-        <button class="practice-tab" type="button" data-mode="gap">🧩 Missing word</button>
-        <button class="practice-tab" type="button" data-mode="build">🧱 Build sentence</button>
-      </div>
-
-      <div class="practice-prompt">
-        <span id="practiceInstruction">Translate into Italian</span>
-        <strong id="practicePrompt">I am hungry.</strong>
-      </div>
-
-      <div id="practiceInputArea" class="practice-input-area">
-        <label id="practiceInputLabel" for="practiceInput">Type your answer</label>
-        <input id="practiceInput" type="text" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Type in Italian…" />
-      </div>
-
-      <div id="buildArea" class="hidden">
-        <p class="label">Tap the words in the right order</p>
-        <div id="wordBank" class="word-bank" aria-label="Available words"></div>
-        <div id="builtSentence" class="built-sentence" aria-live="polite">Your sentence will appear here…</div>
-        <button id="clearBuildBtn" class="text-btn" type="button">Clear sentence</button>
-      </div>
-
-      <p id="practiceFeedback" class="feedback" aria-live="polite"></p>
-      <div class="practice-actions">
-        <button id="checkPracticeBtn" class="primary-btn" type="button">Check answer</button>
-        <button id="revealPracticeBtn" class="secondary-btn" type="button">Show answer</button>
-        <button id="nextPracticeBtn" class="secondary-btn" type="button">Next →</button>
-      </div>
-      <button id="restartPracticeBtn" class="text-btn inline-reset" type="button">↻ Restart these exercises</button>
-    </section>
-
-    <section class="card quiz-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Mini conversation</p>
-          <h2>What would you say?</h2>
+        <div id="categoryTabs" class="tabs" aria-label="Lesson categories"></div>
+        <div class="phrase-wrap">
+          <p class="label">Listen and repeat</p>
+          <h3 id="italianPhrase">Ciao! Come stai?</h3>
+          <p id="pronunciation" class="pronunciation">chow • KOH-meh stai</p>
         </div>
-        <span id="quizCount" class="pill">1 / 12</span>
-      </div>
-      <div class="prompt-box">
-        <span>Freddy says:</span>
-        <strong id="quizPrompt">Buongiorno! Come stai?</strong>
-      </div>
-      <div id="answerList" class="answer-list"></div>
-      <p id="quizFeedback" class="feedback" aria-live="polite"></p>
-      <div class="quiz-actions">
-        <button id="nextQuizBtn" class="primary-btn hidden" type="button">Next conversation →</button>
-        <button id="restartQuizBtn" class="text-btn" type="button">↻ Restart quiz</button>
-      </div>
-    </section>
-
-    <section class="card date-card">
-      <p class="eyebrow">Shazzy + Freddy challenge ❤️</p>
-      <h2>Italian only for 5 minutes</h2>
-      <p class="muted">Tap a rescue phrase if you get stuck.</p>
-      <div id="rescueList" class="rescue-grid"></div>
-    </section>
-
-    <section class="card sardinia-card">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Bonus island chaos 🏝️</p>
-          <h2>Sardinian starter</h2>
+        <div id="meaningPanel" class="meaning hidden" aria-live="polite">
+          <span>Meaning</span><strong id="englishPhrase">Hi! How are you?</strong>
         </div>
-        <span class="pill">Bonus</span>
-      </div>
-      <p class="muted">Not Italian — a tiny Sardinian bonus from Freddy’s world. Spellings and usage can vary by area.</p>
-      <div class="sardinia-grid">
-        <button class="rescue sardinian" type="button" data-say="Ajò"><strong>Ajò!</strong><span>Come on / let’s go!</span></button>
-        <button class="rescue sardinian" type="button" data-say="Eja"><strong>Eja!</strong><span>Yes!</span></button>
-        <button class="rescue sardinian" type="button" data-say="Gratzias"><strong>Gratzias</strong><span>Thank you</span></button>
-      </div>
+        <div class="action-grid">
+          <button id="hearBtn" class="primary-btn" type="button">🔊 Hear Italian</button>
+          <button id="revealBtn" class="secondary-btn" type="button">Reveal meaning</button>
+          <button id="saidBtn" class="secondary-btn wide-btn" type="button">✓ I said it aloud</button>
+          <button id="nextPhraseBtn" class="primary-btn wide-btn" type="button">Next phrase →</button>
+        </div>
+        <p class="tiny-note">Listen, repeat and build confidence. No microphone judgement ❤️</p>
+      </section>
     </section>
 
-    <section class="card love-note">
-      <p class="eyebrow">A note from Freddy ❤️</p>
-      <p>“Shazzy, amore mio, non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te.”</p>
-      <small>Shazzy, my love, you don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+    <section class="app-view" data-view="practice">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>✍️ Exercises</span></div>
+      <section class="card practice-picker-card">
+        <p class="eyebrow">Practice menu</p>
+        <h2>What do you want to do?</h2>
+        <div class="practice-tabs practice-menu" role="group" aria-label="Practice mode">
+          <button class="practice-tab active" type="button" data-mode="write"><span>✍️</span><strong>Write it</strong><small>Type the full Italian sentence</small></button>
+          <button class="practice-tab" type="button" data-mode="gap"><span>🧩</span><strong>Missing word</strong><small>Fill in one word</small></button>
+          <button class="practice-tab" type="button" data-mode="build"><span>🧱</span><strong>Build sentence</strong><small>Tap words in order</small></button>
+          <button class="practice-tab" type="button" data-mode="mix"><span>🎲</span><strong>Mix it up</strong><small>A bit of everything</small></button>
+        </div>
+      </section>
+
+      <section class="card practice-card">
+        <div class="section-head">
+          <div><p class="eyebrow">Practice lab</p><h2 id="practiceModeTitle">Write it</h2></div>
+          <span id="practiceCount" class="pill">1 / 24</span>
+        </div>
+        <div class="practice-prompt">
+          <span id="practiceInstruction">Translate into Italian</span>
+          <strong id="practicePrompt">I am hungry.</strong>
+        </div>
+        <div id="practiceInputArea" class="practice-input-area">
+          <label id="practiceInputLabel" for="practiceInput">Type your answer</label>
+          <input id="practiceInput" type="text" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Type in Italian…" />
+        </div>
+        <div id="buildArea" class="hidden">
+          <p class="label">Tap the words in the right order</p>
+          <div id="wordBank" class="word-bank" aria-label="Available words"></div>
+          <div id="builtSentence" class="built-sentence" aria-live="polite">Your sentence will appear here…</div>
+          <button id="clearBuildBtn" class="text-btn" type="button">Clear sentence</button>
+        </div>
+        <p id="practiceFeedback" class="feedback" aria-live="polite"></p>
+        <div class="practice-actions">
+          <button id="checkPracticeBtn" class="primary-btn" type="button">Check answer</button>
+          <button id="revealPracticeBtn" class="secondary-btn" type="button">Show answer</button>
+          <button id="nextPracticeBtn" class="secondary-btn" type="button">Next →</button>
+        </div>
+        <button id="restartPracticeBtn" class="text-btn inline-reset" type="button">↻ Restart these exercises</button>
+      </section>
+    </section>
+
+    <section class="app-view" data-view="conversation">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>💬 Conversations</span></div>
+      <section class="card quiz-card">
+        <div class="section-head">
+          <div><p class="eyebrow">Mini conversation</p><h2>What would you say?</h2></div>
+          <span id="quizCount" class="pill">1 / 12</span>
+        </div>
+        <div class="prompt-box"><span>Freddy says:</span><strong id="quizPrompt">Buongiorno! Come stai?</strong></div>
+        <div id="answerList" class="answer-list"></div>
+        <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+        <div class="quiz-actions">
+          <button id="nextQuizBtn" class="primary-btn hidden" type="button">Next conversation →</button>
+          <button id="restartQuizBtn" class="text-btn" type="button">↻ Restart quiz</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="app-view" data-view="progress">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>🏆 My progress</span></div>
+      <section class="card level-card">
+        <div class="section-head">
+          <div><p class="eyebrow">Shazzy’s journey</p><h2 id="levelTitle">Principiante 🌱</h2></div>
+          <span id="levelPoints" class="pill">0 / 50</span>
+        </div>
+        <div class="progress-track"><div id="levelBar" class="progress-bar"></div></div>
+        <p id="levelHint" class="muted">Every phrase counts. Next stop: Coraggiosa 💪</p>
+        <div class="achievement-headline"><strong id="achievementSummary">0 / 12 achievements</strong><span class="muted">Unlock them as you practise</span></div>
+        <div id="badgeList" class="badge-list" aria-label="Achievements"></div>
+      </section>
+
+      <section class="card score-card">
+        <div class="section-head"><div><p class="eyebrow">Scoring ⭐</p><h2>How points work</h2></div><span id="scoreTotalPill" class="pill">0 pts</span></div>
+        <details class="score-details">
+          <summary>Show scoring rules</summary>
+          <div class="score-grid">
+            <div><strong>+5</strong><span>Say a phrase</span><small>First 5 each day</small></div>
+            <div><strong>+10</strong><span>Conversation</span><small>First correct answer</small></div>
+            <div><strong>+15</strong><span>Write it</span><small>First correct sentence</small></div>
+            <div><strong>+10</strong><span>Missing word</span><small>First correct answer</small></div>
+            <div><strong>+12</strong><span>Build sentence</span><small>First correct build</small></div>
+          </div>
+          <p class="tiny-note">Points are awarded once per exercise so the score reflects progress, not button tapping.</p>
+        </details>
+      </section>
+    </section>
+
+    <section class="app-view" data-view="reminder">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>🔔 Reminder & settings</span></div>
+      <section class="card reminder-card">
+        <div class="section-head">
+          <div><p class="eyebrow">Daily Italian reminder 🔔</p><h2>Pick Shazzy’s practice time</h2></div>
+          <span id="reminderPill" class="pill">Off</span>
+        </div>
+        <div class="reminder-controls">
+          <label for="reminderTime">Remind me every day at</label>
+          <input id="reminderTime" type="time" value="19:00" />
+          <button id="saveReminderBtn" class="primary-btn" type="button">Save reminder</button>
+        </div>
+        <div class="reminder-actions">
+          <button id="notificationBtn" class="secondary-btn" type="button">🔔 Allow app notifications</button>
+          <button id="calendarReminderBtn" class="secondary-btn" type="button">📅 Add daily calendar reminder</button>
+          <button id="disableReminderBtn" class="text-btn" type="button">Turn reminder off</button>
+        </div>
+        <p id="reminderStatus" class="muted reminder-status" aria-live="polite">Choose a time and save it.</p>
+        <p class="tiny-note">The calendar option is the reliable choice when the app is completely closed.</p>
+      </section>
+      <section class="card settings-card">
+        <p class="eyebrow">Settings</p>
+        <h2>Start fresh</h2>
+        <p class="muted">Only use this if Shazzy wants to wipe all points, streaks and achievements.</p>
+        <button id="resetBtn" type="button" class="secondary-btn danger-btn">Reset everything</button>
+      </section>
+    </section>
+
+    <section class="app-view" data-view="extras">
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>❤️ Freddy extras</span></div>
+      <section class="card date-card">
+        <p class="eyebrow">Shazzy + Freddy challenge ❤️</p>
+        <h2>Italian only for 5 minutes</h2>
+        <p class="muted">Tap a rescue phrase if you get stuck.</p>
+        <div id="rescueList" class="rescue-grid"></div>
+      </section>
+      <section class="card sardinia-card">
+        <div class="section-head"><div><p class="eyebrow">Bonus island chaos 🏝️</p><h2>Sardinian starter</h2></div><span class="pill">Bonus</span></div>
+        <p class="muted">Not Italian — a tiny Sardinian bonus from Freddy’s world. Spellings and usage can vary by area.</p>
+        <div class="sardinia-grid">
+          <button class="rescue sardinian" type="button" data-say="Ajò"><strong>Ajò!</strong><span>Come on / let’s go!</span></button>
+          <button class="rescue sardinian" type="button" data-say="Eja"><strong>Eja!</strong><span>Yes!</span></button>
+          <button class="rescue sardinian" type="button" data-say="Gratzias"><strong>Gratzias</strong><span>Thank you</span></button>
+        </div>
+      </section>
+      <section class="card love-note">
+        <p class="eyebrow">A note from Freddy ❤️</p>
+        <p>“Shazzy, amore mio, non devi essere perfetta. Basta provarci — e io sarò qui a parlare italiano con te.”</p>
+        <small>Shazzy, my love, you don’t have to be perfect. Just try — and I’ll be here speaking Italian with you.</small>
+      </section>
     </section>
 
     <footer>
-      <button id="resetBtn" type="button" class="text-btn danger-link">Reset everything</button>
       <p>Made with love for Shazzy — from Freddy ❤️🇮🇹</p>
-      <p class="tiny">V4.1 • Scores, achievements & reminders</p>
+      <p class="tiny">V4.2 • Cleaner menus & exercise chooser</p>
     </footer>
   </main>
-
   <script src="app.js" defer></script>
 </body>
 </html>
