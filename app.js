@@ -144,6 +144,7 @@ let state=loadState();
 let quizLocked=false;
 let deferredPrompt=null;
 let buildTokens=[];
+let selectedGapChoice=null;
 
 const $=id=>document.getElementById(id);
 function loadState(){
@@ -283,6 +284,44 @@ function gapPhrase(item){
   const rx=new RegExp(item.gap.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i');
   return item.it.replace(rx,'_____');
 }
+function gapChoices(item,index){
+  const answer=item.gap;
+  const pool=[];
+  for(let step=1;pool.length<3&&step<practiceItems.length*2;step++){
+    const candidate=practiceItems[(index+step*5)%practiceItems.length].gap;
+    if(normalizeItalian(candidate)!==normalizeItalian(answer)&&!pool.some(x=>normalizeItalian(x)===normalizeItalian(candidate)))pool.push(candidate);
+  }
+  const choices=[answer,...pool];
+  let seed=(index+11)*7919;
+  for(let i=choices.length-1;i>0;i--){seed=(seed*9301+49297)%233280;const j=Math.floor((seed/233280)*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]]}
+  return choices;
+}
+function renderGapChoices(item){
+  const list=$('gapChoiceList');list.innerHTML='';selectedGapChoice=null;
+  gapChoices(item,state.practiceIndex).forEach(word=>{
+    const b=document.createElement('button');b.type='button';b.className='gap-choice';b.textContent=word;
+    b.addEventListener('click',()=>{
+      selectedGapChoice=word;
+      document.querySelectorAll('.gap-choice').forEach(x=>x.classList.toggle('selected',x===b));
+      $('practiceFeedback').textContent='';$('practiceFeedback').className='feedback';
+    });
+    list.appendChild(b);
+  });
+}
+function showPracticeHint(){
+  const item=practiceItems[state.practiceIndex%practiceItems.length];
+  const mode=effectivePracticeMode();const box=$('practiceHint');box.classList.remove('hidden');
+  if(mode==='write'){
+    const words=item.it.replace(/[?!.,]/g,'').trim().split(/\s+/);
+    box.textContent=`💡 Starts with “${words[0]}” · ${words.length} word${words.length===1?'':'s'} total.`;
+  }else if(mode==='gap'){
+    const clean=item.gap.replace(/[^A-Za-zÀ-ÿ]/g,'');
+    box.textContent=`💡 It starts with “${item.gap.charAt(0).toUpperCase()}” and has ${clean.length} letters. English clue: ${item.en}`;
+  }else{
+    const first=item.it.replace(/[?!.,]/g,'').trim().split(/\s+/)[0];
+    box.textContent=`💡 Start with “${first}”. Then build the rest from the word tiles.`;
+  }
+}
 function shuffledWords(text,index){
   const words=text.trim().split(/\s+/);const arr=words.map((w,i)=>({w,id:i}));
   let seed=(index+1)*9973+words.length*37;
@@ -307,16 +346,19 @@ function renderPractice(){
   const mode=effectivePracticeMode();
   $('practiceCount').textContent=`${state.practiceIndex+1} / ${practiceItems.length}`;
   $('practiceFeedback').textContent='';$('practiceFeedback').className='feedback';
-  $('practiceInput').value='';$('buildArea').classList.add('hidden');$('practiceInputArea').classList.remove('hidden');
+  $('practiceInput').value='';selectedGapChoice=null;
+  $('buildArea').classList.add('hidden');$('gapChoiceArea').classList.add('hidden');$('practiceInputArea').classList.remove('hidden');
+  $('practiceHint').classList.add('hidden');$('practiceHint').textContent='';
   renderPracticeTabs();
   const title=$('practiceModeTitle');
-  if(title)title.textContent=state.practiceMode==='mix'?`Mix it up · ${mode==='write'?'Write it':mode==='gap'?'Missing word':'Build sentence'}`:(mode==='write'?'Write it':mode==='gap'?'Missing word':'Build sentence');
+  const modeLabel=mode==='write'?'Write it':mode==='gap'?'Choose the word':'Build sentence';
+  if(title)title.textContent=state.practiceMode==='mix'?`Mix it up · ${modeLabel}`:modeLabel;
   if(mode==='write'){
     $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Translate into Italian':'Translate into Italian';$('practicePrompt').textContent=item.en;
     $('practiceInputLabel').textContent='Type the full Italian sentence';$('practiceInput').placeholder='Type in Italian…';
   }else if(mode==='gap'){
-    $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Type the missing word':'Type the missing Italian word';$('practicePrompt').textContent=gapPhrase(item);
-    $('practiceInputLabel').textContent=`Hint: ${item.en}`;$('practiceInput').placeholder='Missing word…';
+    $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Choose the missing word':'Choose the missing Italian word';$('practicePrompt').textContent=gapPhrase(item);
+    $('practiceInputArea').classList.add('hidden');$('gapChoiceArea').classList.remove('hidden');renderGapChoices(item);
   }else{
     $('practiceInstruction').textContent=state.practiceMode==='mix'?'Mixed challenge · Build the sentence':'Build this sentence in Italian';$('practicePrompt').textContent=item.en;
     $('practiceInputArea').classList.add('hidden');$('buildArea').classList.remove('hidden');
@@ -349,13 +391,15 @@ function checkPractice(){
   const mode=effectivePracticeMode();
   let answer='',target='',threshold=.9,points=12;
   if(mode==='write'){answer=$('practiceInput').value;target=item.it;threshold=.86;points=15;}
-  else if(mode==='gap'){answer=$('practiceInput').value;target=item.gap;threshold=.9;points=10;}
+  else if(mode==='gap'){answer=selectedGapChoice||'';target=item.gap;threshold=.99;points=10;}
   else{answer=buildTokens.map(x=>x.w).join(' ');target=item.it;threshold=.98;points=12;}
-  if(!normalizeItalian(answer)){showPracticeFeedback('Type or build an answer first 💜','bad');return}
+  if(!normalizeItalian(answer)){showPracticeFeedback(mode==='gap'?'Choose one of the words first 💜':'Type or build an answer first 💜','bad');return}
   if(similarity(answer,target)>=threshold){
+    if(mode==='gap')document.querySelectorAll('.gap-choice').forEach(b=>{if(normalizeItalian(b.textContent)===normalizeItalian(target))b.classList.add('correct')});
     showPracticeFeedback('✅ Bravissima! '+item.it,'good');awardPractice(mode,state.practiceIndex,points);speak(item.it);
   }else{
-    showPracticeFeedback('Nearly — have another go, or tap “Show answer”.','bad');
+    if(mode==='gap')document.querySelectorAll('.gap-choice').forEach(b=>{if(b.classList.contains('selected'))b.classList.add('wrong')});
+    showPracticeFeedback('Almost — try another choice or use the hint 💜','bad');
   }
 }
 function revealPractice(){
@@ -454,6 +498,7 @@ $('dailyLoveReveal').addEventListener('click',()=>{const hidden=$('dailyLoveEngl
 
 document.querySelectorAll('.practice-tab').forEach(b=>b.addEventListener('click',()=>{state.practiceMode=b.dataset.mode;state.practiceIndex=0;saveState();renderPractice()}));
 $('checkPracticeBtn').addEventListener('click',checkPractice);
+$('hintPracticeBtn').addEventListener('click',showPracticeHint);
 $('revealPracticeBtn').addEventListener('click',revealPractice);
 $('nextPracticeBtn').addEventListener('click',nextPractice);
 $('restartPracticeBtn').addEventListener('click',()=>{state.practiceIndex=0;saveState();renderPractice()});

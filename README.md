@@ -15,3 +15,9 @@ V4 adds:
 
 ## V4.1
 Adds visible score rules, persistent achievements, one-time scoring per exercise, and a configurable daily reminder with browser-notification and repeating calendar reminder options.
+
+
+## V4.3
+- Beginner-friendly hints in exercises.
+- Missing-word practice now uses four tappable word choices.
+- Learn section renamed to Learn & listen for clearer navigation.

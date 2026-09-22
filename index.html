@@ -65,7 +65,7 @@
         </div>
         <div class="home-menu" aria-label="App menu">
           <button class="menu-tile" type="button" data-open-view="learn">
-            <span class="menu-icon">📚</span><strong>Learn phrases</strong><small>Listen, repeat & reveal</small>
+            <span class="menu-icon">📚</span><strong>Learn & listen</strong><small>Hear phrases, repeat & reveal</small>
           </button>
           <button class="menu-tile" type="button" data-open-view="practice">
             <span class="menu-icon">✍️</span><strong>Exercises</strong><small>Write, fill gaps & build</small>
@@ -87,7 +87,7 @@
     </section>
 
     <section class="app-view" data-view="learn">
-      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>📚 Learn phrases</span></div>
+      <div class="view-toolbar"><button class="back-home" type="button" data-home>← Home</button><span>📚 Learn & listen</span></div>
       <section class="card lesson-card">
         <div class="section-head">
           <div><p class="eyebrow">Shazzy’s Italian</p><h2>Choose today’s mood</h2></div>
@@ -119,7 +119,7 @@
         <h2>What do you want to do?</h2>
         <div class="practice-tabs practice-menu" role="group" aria-label="Practice mode">
           <button class="practice-tab active" type="button" data-mode="write"><span>✍️</span><strong>Write it</strong><small>Type the full Italian sentence</small></button>
-          <button class="practice-tab" type="button" data-mode="gap"><span>🧩</span><strong>Missing word</strong><small>Fill in one word</small></button>
+          <button class="practice-tab" type="button" data-mode="gap"><span>🧩</span><strong>Choose the word</strong><small>Pick the missing word from 4 choices</small></button>
           <button class="practice-tab" type="button" data-mode="build"><span>🧱</span><strong>Build sentence</strong><small>Tap words in order</small></button>
           <button class="practice-tab" type="button" data-mode="mix"><span>🎲</span><strong>Mix it up</strong><small>A bit of everything</small></button>
         </div>
@@ -138,6 +138,11 @@
           <label id="practiceInputLabel" for="practiceInput">Type your answer</label>
           <input id="practiceInput" type="text" inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Type in Italian…" />
         </div>
+        <div id="gapChoiceArea" class="hidden">
+          <p class="label">Choose one</p>
+          <div id="gapChoiceList" class="gap-choice-list" aria-label="Word choices"></div>
+        </div>
+        <div id="practiceHint" class="practice-hint hidden" aria-live="polite"></div>
         <div id="buildArea" class="hidden">
           <p class="label">Tap the words in the right order</p>
           <div id="wordBank" class="word-bank" aria-label="Available words"></div>
@@ -147,6 +152,7 @@
         <p id="practiceFeedback" class="feedback" aria-live="polite"></p>
         <div class="practice-actions">
           <button id="checkPracticeBtn" class="primary-btn" type="button">Check answer</button>
+          <button id="hintPracticeBtn" class="secondary-btn" type="button">💡 Hint</button>
           <button id="revealPracticeBtn" class="secondary-btn" type="button">Show answer</button>
           <button id="nextPracticeBtn" class="secondary-btn" type="button">Next →</button>
         </div>
@@ -254,7 +260,7 @@
 
     <footer>
       <p>Made with love for Shazzy — from Freddy ❤️🇮🇹</p>
-      <p class="tiny">V4.2 • Cleaner menus & exercise chooser</p>
+      <p class="tiny">V4.3 • Hints & word choices</p>
     </footer>
   </main>
   <script src="app.js" defer></script>
