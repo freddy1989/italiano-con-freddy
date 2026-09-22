@@ -134,11 +134,21 @@ const levels=[
   {min:250,max:null,name:'Italian Girlfriend Mode',emoji:'😏🇮🇹',next:null}
 ];
 
+const stickerRewards=[
+  {id:'first-words',title:'First words 💕',hint:'Say 1 phrase out loud',text:'You said your first Italian phrase out loud.',image:'stickers/sticker-1.png',unlocked:()=>state.spoken>=1},
+  {id:'daily-five',title:'Daily five 🔥',hint:'Complete the 5-phrase daily mission',text:'Five phrases in one day = one very cute reward.',image:'stickers/sticker-2.png',unlocked:()=> (state.missionsCompleted||0)>=1},
+  {id:'quiz-star',title:'Quiz star ⭐',hint:'Get 3 conversation answers right',text:'Freddy is impressed with those smart replies.',image:'stickers/sticker-3.png',unlocked:()=> (state.quizCorrect||0)>=3},
+  {id:'practice-pro',title:'Practice pro ✍️',hint:'Complete 6 exercises correctly',text:'Typing and building sentences is paying off.',image:'stickers/sticker-4.png',unlocked:()=> Object.keys(state.practiceWins||{}).length>=6},
+  {id:'three-day',title:'Three-day streak 🔥',hint:'Come back 3 days in a row',text:'Consistency looks very good on you, amore.',image:'stickers/sticker-5.png',unlocked:()=> (state.maxStreak||state.streak||1)>=3},
+  {id:'love-level',title:'Love level 100 💜',hint:'Reach 100 points',text:'You reached 100 points and unlocked the kiss sticker.',image:'stickers/sticker-6.png',unlocked:()=> (state.points||0)>=100}
+];
+
 const defaultState={
   category:'basics',phraseIndex:0,quizIndex:0,points:0,spoken:0,mission:0,
   missionAwards:0,missionDate:null,lastOpen:null,streak:1,quizCorrect:0,
   categoriesUsed:{},practiceMode:'write',practiceIndex:0,practiceCorrect:0,practiceWins:{},quizWins:{},
-  missionsCompleted:0,lastMissionCompleteDate:null,maxStreak:1,reminderEnabled:false,reminderTime:'19:00',reminderLastSent:null
+  missionsCompleted:0,lastMissionCompleteDate:null,maxStreak:1,reminderEnabled:false,reminderTime:'19:00',reminderLastSent:null,
+  seenStickerRewards:{}
 };
 let state=loadState();
 let quizLocked=false;
@@ -150,11 +160,11 @@ const $=id=>document.getElementById(id);
 function loadState(){
   try{
     const old=JSON.parse(localStorage.getItem('italianoConFreddyState')||'{}');
-    const merged={...defaultState,...old,categoriesUsed:old.categoriesUsed||{},practiceWins:old.practiceWins||{},quizWins:old.quizWins||{}};
+    const merged={...defaultState,...old,categoriesUsed:old.categoriesUsed||{},practiceWins:old.practiceWins||{},quizWins:old.quizWins||{},seenStickerRewards:old.seenStickerRewards||{}};
     if((merged.mission||0)>=5 && !(merged.missionsCompleted>0)) merged.missionsCompleted=1;
     merged.maxStreak=Math.max(merged.maxStreak||1,merged.streak||1);
     return merged;
-  }catch{return {...defaultState,categoriesUsed:{},practiceWins:{},quizWins:{}}}
+  }catch{return {...defaultState,categoriesUsed:{},practiceWins:{},quizWins:{},seenStickerRewards:{}}}
 }
 function saveState(){localStorage.setItem('italianoConFreddyState',JSON.stringify(state))}
 function localDateKey(d=new Date()){
@@ -223,7 +233,9 @@ function renderStats(){
     $('levelHint').textContent=`Next stop: ${level.next}`;
   }
   renderBadges();
+  renderStickerHighlights();
 }
+
 function getAchievementData(){
   const cats=Object.keys(state.categoriesUsed||{}).length;
   const practiceKeys=Object.keys(state.practiceWins||{});
@@ -250,6 +262,56 @@ function renderBadges(){
   const wrap=$('badgeList');wrap.innerHTML='';
   badges.forEach(([unlockedFlag,label])=>{const s=document.createElement('span');s.className='badge'+(unlockedFlag?' unlocked':'');s.textContent=unlockedFlag?label:'🔒 '+label.replace(/^\S+\s/,'');wrap.appendChild(s)});
 }
+function unlockedStickerRewards(){return stickerRewards.filter(reward=>reward.unlocked())}
+function getFeaturedSticker(){const unlocked=unlockedStickerRewards();return unlocked.length?unlocked[unlocked.length-1]:stickerRewards[0]}
+function renderStickerHighlights(){
+  const homeCount=$('stickerUnlockedCount');
+  const galleryCount=$('stickerGalleryCount');
+  const unlocked=unlockedStickerRewards();
+  if(homeCount)homeCount.textContent=`${unlocked.length} / ${stickerRewards.length} unlocked`;
+  if(galleryCount)galleryCount.textContent=`${unlocked.length} / ${stickerRewards.length}`;
+  const featured=getFeaturedSticker();
+  if($('featuredStickerImg'))$('featuredStickerImg').src=featured.image;
+  if($('featuredStickerTitle'))$('featuredStickerTitle').textContent=unlocked.length?featured.title:'First little reward';
+  if($('featuredStickerText'))$('featuredStickerText').textContent=unlocked.length?featured.text:`${featured.hint} to unlock your first couple sticker.`;
+  renderStickerGallery();
+}
+function renderStickerGallery(){
+  const wrap=$('stickerGallery');
+  if(!wrap)return;
+  wrap.innerHTML='';
+  stickerRewards.forEach(reward=>{
+    const unlocked=reward.unlocked();
+    const card=document.createElement('article');
+    card.className='sticker-tile'+(unlocked?'':' locked');
+    card.innerHTML=`<img src="${reward.image}" alt="${reward.title}"><div class="sticker-meta"><span class="sticker-status">${unlocked?'✨ Unlocked':'🔒 Locked'}</span><strong>${reward.title}</strong><small>${unlocked?reward.text:reward.hint}</small></div>`;
+    wrap.appendChild(card);
+  });
+}
+function openStickerReward(reward){
+  const modal=$('stickerUnlockModal');
+  if(!modal)return;
+  $('rewardStickerImg').src=reward.image;
+  $('rewardStickerTitle').textContent=reward.title;
+  $('rewardStickerText').textContent=reward.text;
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeStickerReward(){
+  const modal=$('stickerUnlockModal');
+  if(!modal)return;
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden','true');
+}
+function maybeShowStickerReward(){
+  const next=stickerRewards.find(reward=>reward.unlocked() && !state.seenStickerRewards[reward.id]);
+  renderStickerHighlights();
+  if(!next)return;
+  state.seenStickerRewards[next.id]=true;
+  saveState();
+  openStickerReward(next);
+}
+
 function renderQuiz(){
   state.quizIndex=Math.max(0,Math.min(state.quizIndex,quizzes.length-1));
   const q=quizzes[state.quizIndex];quizLocked=false;$('quizPrompt').textContent=q.prompt;$('quizCount').textContent=`${state.quizIndex+1} / ${quizzes.length}`;$('quizFeedback').textContent='';$('quizFeedback').className='feedback';$('nextQuizBtn').classList.add('hidden');
@@ -260,7 +322,7 @@ function checkAnswer(index,button){
   if(quizLocked)return;quizLocked=true;const q=quizzes[state.quizIndex];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach(b=>b.disabled=true);
   if(index===q.correct){button.classList.add('correct');$('quizFeedback').textContent='✅ '+q.note;$('quizFeedback').classList.add('good');const key=String(state.quizIndex);if(!state.quizWins[key]){state.quizWins[key]=true;state.points+=10;state.quizCorrect=(state.quizCorrect||0)+1;}speak(q.answers[q.correct]);}
   else{button.classList.add('wrong');buttons[q.correct].classList.add('correct');$('quizFeedback').textContent='Almost! Best reply: “'+q.answers[q.correct]+'”';$('quizFeedback').classList.add('bad');}
-  saveState();renderStats();$('nextQuizBtn').classList.remove('hidden');
+  saveState();renderStats();maybeShowStickerReward();$('nextQuizBtn').classList.remove('hidden');
 }
 function renderRescue(){
   const wrap=$('rescueList');wrap.innerHTML='';
@@ -332,7 +394,7 @@ function shuffledWords(text,index){
 function practiceKey(mode,index){return `${mode}:${index}`}
 function awardPractice(mode,index,points){
   const key=practiceKey(mode,index);
-  if(!state.practiceWins[key]){state.practiceWins[key]=true;state.practiceCorrect=(state.practiceCorrect||0)+1;state.points+=points;saveState();renderStats();}
+  if(!state.practiceWins[key]){state.practiceWins[key]=true;state.practiceCorrect=(state.practiceCorrect||0)+1;state.points+=points;saveState();renderStats();maybeShowStickerReward();}
 }
 function renderPracticeTabs(){
   document.querySelectorAll('.practice-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.practiceMode));
@@ -467,13 +529,14 @@ function showView(name){
   if(name==='progress')renderStats();
   if(name==='practice')renderPractice();
   if(name==='reminder')renderReminder();
+  if(name==='stickers')renderStickerGallery();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function setupNavigation(){
   document.querySelectorAll('[data-open-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.openView)));
   document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>showView('home')));
 }
-function renderAll(){renderWelcome();renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderDailyLove();renderPractice();renderReminder()}
+function renderAll(){renderWelcome();renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderDailyLove();renderPractice();renderReminder();renderStickerHighlights()}
 
 
 $('hearBtn').addEventListener('click',()=>speak($('italianPhrase').textContent));
@@ -485,7 +548,7 @@ $('saidBtn').addEventListener('click',()=>{
     if((state.missionAwards||0)<state.mission){state.points+=5;state.missionAwards=(state.missionAwards||0)+1;}
     if(state.mission===5 && state.lastMissionCompleteDate!==localDateKey()){state.missionsCompleted=(state.missionsCompleted||0)+1;state.lastMissionCompleteDate=localDateKey();}
   }
-  state.categoriesUsed[state.category]=true;saveState();renderStats();
+  state.categoriesUsed[state.category]=true;saveState();renderStats();maybeShowStickerReward();
 });
 $('nextPhraseBtn').addEventListener('click',()=>{const n=lessons[state.category].items.length;state.phraseIndex=(state.phraseIndex+1)%n;saveState();renderPhrase()});
 $('resetMissionBtn').addEventListener('click',()=>{if(confirm('Reset today’s 5-phrase challenge? Your points and total spoken count will stay.')){state.mission=0;saveState();renderStats()}});
@@ -509,8 +572,11 @@ $('saveReminderBtn').addEventListener('click',saveReminder);
 $('notificationBtn').addEventListener('click',requestNotifications);
 $('calendarReminderBtn').addEventListener('click',downloadCalendarReminder);
 $('disableReminderBtn').addEventListener('click',disableReminder);
+$('closeStickerModal').addEventListener('click',closeStickerReward);
+$('rewardStickerCloseBtn').addEventListener('click',closeStickerReward);
+$('rewardOpenGalleryBtn').addEventListener('click',()=>{closeStickerReward();showView('stickers')});
 
-$('resetBtn').addEventListener('click',()=>{if(confirm('Reset ALL progress, points, streaks and achievements?')){state={...defaultState,lastOpen:localDateKey(),missionDate:localDateKey(),categoriesUsed:{},practiceWins:{},quizWins:{}};saveState();renderAll()}});
+$('resetBtn').addEventListener('click',()=>{if(confirm('Reset ALL progress, points, streaks and achievements?')){state={...defaultState,lastOpen:localDateKey(),missionDate:localDateKey(),categoriesUsed:{},practiceWins:{},quizWins:{},seenStickerRewards:{}};saveState();renderAll();closeStickerReward();}});
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.remove('hidden')});
 $('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.add('hidden')});
 window.addEventListener('appinstalled',()=>{$('installBtn').classList.add('hidden')});
@@ -520,4 +586,4 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;window.location.reload()});
   window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{})});
 }
-setupNavigation();updateStreak();renderAll();scheduleReminderCheck();
+setupNavigation();updateStreak();renderAll();maybeShowStickerReward();scheduleReminderCheck();

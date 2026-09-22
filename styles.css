@@ -11,3 +11,31 @@
 
 /* V4.3 beginner-friendly hints and word choices */
 .gap-choice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0 4px}.gap-choice{min-height:48px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:11px 12px;color:var(--text);font-weight:750;text-align:center}.gap-choice.selected{border-color:var(--accent);background:var(--accent2);box-shadow:0 0 0 2px rgba(124,58,237,.08)}.gap-choice.correct{border-color:#9ed8bb;background:#effaf4}.gap-choice.wrong{border-color:#efb2bf;background:#fff4f6}.practice-hint{margin:10px 0 2px;padding:12px 14px;border:1px solid #e5d7f4;background:#fbf7ff;border-radius:14px;color:#5f5667;font-size:.86rem;line-height:1.45}.practice-actions{grid-template-columns:1.2fr 1fr 1fr 1fr}@media(max-width:620px){.practice-actions{grid-template-columns:1fr 1fr}.practice-actions .primary-btn{grid-column:1/-1}}@media(max-width:520px){.gap-choice-list{grid-template-columns:1fr 1fr}.practice-actions{grid-template-columns:1fr 1fr}.practice-actions .primary-btn{grid-column:1/-1}}@media(max-width:360px){.gap-choice-list{grid-template-columns:1fr}}
+
+
+/* V4.4 Sticker rewards */
+.motivation-card{display:grid;gap:14px}
+.motivation-sticker-wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.featured-sticker{width:126px;max-width:34vw;aspect-ratio:1/1;object-fit:contain;display:block;filter:drop-shadow(0 12px 24px rgba(124,58,237,.18))}
+.sticker-copy{flex:1;min-width:190px;display:grid;gap:8px}
+.sticker-copy strong{font-size:1.05rem}
+.sticker-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.sticker-tile{border:1px solid rgba(124,58,237,.14);border-radius:24px;padding:12px;background:linear-gradient(180deg,#fff 0%,#fcf9ff 100%);display:grid;gap:10px;align-content:start}
+.sticker-tile.locked{opacity:.7}
+.sticker-tile img{width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:18px;background:linear-gradient(180deg,#f8f1ff 0%,#fff 100%)}
+.sticker-meta{display:grid;gap:4px}
+.sticker-meta strong{font-size:.98rem;line-height:1.2}
+.sticker-meta small{color:#6b7280;line-height:1.35}
+.sticker-status{display:inline-flex;align-items:center;gap:6px;width:max-content;padding:6px 10px;border-radius:999px;font-size:.82rem;font-weight:700;background:#efe7ff;color:#6d28d9}
+.sticker-tile.locked .sticker-status{background:#f3f4f6;color:#6b7280}
+.reward-modal{position:fixed;inset:0;padding:18px;background:rgba(17,24,39,.48);display:flex;align-items:center;justify-content:center;z-index:50}
+.reward-modal.hidden{display:none}
+.reward-dialog{width:min(100%,420px);position:relative;text-align:center;display:grid;gap:12px}
+.close-modal{position:absolute;top:10px;right:10px;border:none;background:#f3f4f6;border-radius:999px;width:36px;height:36px;font-size:1.4rem;line-height:1;cursor:pointer}
+.reward-sticker{width:min(100%,260px);margin:0 auto;display:block;object-fit:contain}
+.reward-actions{display:flex;gap:10px;flex-wrap:wrap}
+.reward-actions > button{flex:1}
+@media (max-width:560px){
+  .sticker-gallery{grid-template-columns:1fr}
+  .featured-sticker{width:110px}
+}
