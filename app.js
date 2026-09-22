@@ -125,7 +125,8 @@ const levels=[
 const defaultState={
   category:'basics',phraseIndex:0,quizIndex:0,points:0,spoken:0,mission:0,
   missionAwards:0,missionDate:null,lastOpen:null,streak:1,quizCorrect:0,
-  categoriesUsed:{},practiceMode:'write',practiceIndex:0,practiceCorrect:0,practiceWins:{}
+  categoriesUsed:{},practiceMode:'write',practiceIndex:0,practiceCorrect:0,practiceWins:{},quizWins:{},
+  missionsCompleted:0,lastMissionCompleteDate:null,maxStreak:1,reminderEnabled:false,reminderTime:'19:00',reminderLastSent:null
 };
 let state=loadState();
 let quizLocked=false;
@@ -136,8 +137,11 @@ const $=id=>document.getElementById(id);
 function loadState(){
   try{
     const old=JSON.parse(localStorage.getItem('italianoConFreddyState')||'{}');
-    return {...defaultState,...old,categoriesUsed:old.categoriesUsed||{},practiceWins:old.practiceWins||{}};
-  }catch{return {...defaultState,categoriesUsed:{},practiceWins:{}}}
+    const merged={...defaultState,...old,categoriesUsed:old.categoriesUsed||{},practiceWins:old.practiceWins||{},quizWins:old.quizWins||{}};
+    if((merged.mission||0)>=5 && !(merged.missionsCompleted>0)) merged.missionsCompleted=1;
+    merged.maxStreak=Math.max(merged.maxStreak||1,merged.streak||1);
+    return merged;
+  }catch{return {...defaultState,categoriesUsed:{},practiceWins:{},quizWins:{}}}
 }
 function saveState(){localStorage.setItem('italianoConFreddyState',JSON.stringify(state))}
 function localDateKey(d=new Date()){
@@ -156,6 +160,7 @@ function updateStreak(){
     const prev=dateFromKey(state.lastOpen),curr=dateFromKey(today);
     const days=prev&&curr?Math.round((curr-prev)/86400000):99;
     state.streak=days===1?(state.streak||1)+1:1;
+    state.maxStreak=Math.max(state.maxStreak||1,state.streak||1);
     state.lastOpen=today;
   }
   saveState();
@@ -193,7 +198,7 @@ function renderPhrase(){
 }
 function getLevel(){return levels.find(l=>state.points>=l.min&&(l.max===null||state.points<l.max))||levels[levels.length-1]}
 function renderStats(){
-  $('pointsValue').textContent=state.points;$('spokenValue').textContent=state.spoken;$('streakValue').textContent=`${state.streak} day${state.streak===1?'':'s'}`;
+  $('pointsValue').textContent=state.points;const scorePill=$('scoreTotalPill');if(scorePill)scorePill.textContent=`${state.points} pts`;$('spokenValue').textContent=state.spoken;$('streakValue').textContent=`${state.streak} day${state.streak===1?'':'s'}`;
   const level=getLevel();$('levelValue').textContent=level.name;
   $('missionText').textContent=`${state.mission} / 5`;$('missionBar').style.width=`${Math.min(100,state.mission*20)}%`;
   $('saidBtn').textContent=state.mission>=5?'🎉 Mission complete':'✓ I said it aloud';
@@ -206,21 +211,31 @@ function renderStats(){
   }
   renderBadges();
 }
-function renderBadges(){
+function getAchievementData(){
   const cats=Object.keys(state.categoriesUsed||{}).length;
-  const practiceCount=Object.keys(state.practiceWins||{}).length;
-  const badges=[
+  const practiceKeys=Object.keys(state.practiceWins||{});
+  const modes=new Set(practiceKeys.map(k=>k.split(':')[0]));
+  return [
     [state.spoken>=1,'🗣️ First words'],
-    [state.mission>=5,'🔥 Daily mission'],
-    [state.quizCorrect>=3,'⭐ Quiz star'],
-    [practiceCount>=1,'✍️ First sentence'],
-    [practiceCount>=6,'🧩 Practice pro'],
+    [(state.missionsCompleted||0)>=1,'🔥 Daily five'],
+    [(state.quizCorrect||0)>=3,'⭐ Quiz star'],
+    [practiceKeys.length>=1,'✍️ First sentence'],
+    [practiceKeys.length>=6,'🧩 Practice pro'],
     [state.points>=50,'💜 50 points'],
-    [state.streak>=3,'🔥 3-day streak'],
-    [cats>=5,'🌍 Explorer']
+    [state.points>=100,'✨ 100 points'],
+    [state.points>=250,'🇮🇹 Italian Girlfriend'],
+    [(state.maxStreak||state.streak||1)>=3,'🔥 3-day streak'],
+    [(state.maxStreak||state.streak||1)>=7,'🏅 7-day streak'],
+    [cats>=5,'🌍 Explorer'],
+    [modes.size>=3,'👑 Triple threat']
   ];
+}
+function renderBadges(){
+  const badges=getAchievementData();
+  const unlocked=badges.filter(([ok])=>ok).length;
+  const summary=$('achievementSummary');if(summary)summary.textContent=`${unlocked} / ${badges.length} achievements`;
   const wrap=$('badgeList');wrap.innerHTML='';
-  badges.forEach(([unlocked,label])=>{const s=document.createElement('span');s.className='badge'+(unlocked?' unlocked':'');s.textContent=unlocked?label:'🔒 '+label.replace(/^\S+\s/,'');wrap.appendChild(s)});
+  badges.forEach(([unlockedFlag,label])=>{const s=document.createElement('span');s.className='badge'+(unlockedFlag?' unlocked':'');s.textContent=unlockedFlag?label:'🔒 '+label.replace(/^\S+\s/,'');wrap.appendChild(s)});
 }
 function renderQuiz(){
   state.quizIndex=Math.max(0,Math.min(state.quizIndex,quizzes.length-1));
@@ -230,7 +245,7 @@ function renderQuiz(){
 }
 function checkAnswer(index,button){
   if(quizLocked)return;quizLocked=true;const q=quizzes[state.quizIndex];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach(b=>b.disabled=true);
-  if(index===q.correct){button.classList.add('correct');$('quizFeedback').textContent='✅ '+q.note;$('quizFeedback').classList.add('good');state.points+=10;state.quizCorrect=(state.quizCorrect||0)+1;speak(q.answers[q.correct]);}
+  if(index===q.correct){button.classList.add('correct');$('quizFeedback').textContent='✅ '+q.note;$('quizFeedback').classList.add('good');const key=String(state.quizIndex);if(!state.quizWins[key]){state.quizWins[key]=true;state.points+=10;state.quizCorrect=(state.quizCorrect||0)+1;}speak(q.answers[q.correct]);}
   else{button.classList.add('wrong');buttons[q.correct].classList.add('correct');$('quizFeedback').textContent='Almost! Best reply: “'+q.answers[q.correct]+'”';$('quizFeedback').classList.add('bad');}
   saveState();renderStats();$('nextQuizBtn').classList.remove('hidden');
 }
@@ -330,7 +345,61 @@ function revealPractice(){
 function nextPractice(){
   state.practiceIndex=(state.practiceIndex+1)%practiceItems.length;saveState();renderPractice();
 }
-function renderAll(){renderWelcome();renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderDailyLove();renderPractice()}
+function renderReminder(){
+  const input=$('reminderTime');if(input)input.value=state.reminderTime||'19:00';
+  const pill=$('reminderPill');const status=$('reminderStatus');
+  if(pill)pill.textContent=state.reminderEnabled?(state.reminderTime||'19:00'):'Off';
+  if(status){
+    if(!state.reminderEnabled)status.textContent='Reminder is off. Choose a time and save it.';
+    else status.textContent=`Daily Italian reminder saved for ${state.reminderTime}.`;
+  }
+  const nb=$('notificationBtn');
+  if(nb && 'Notification' in window){
+    nb.textContent=Notification.permission==='granted'?'✅ App notifications allowed':'🔔 Allow app notifications';
+  }
+}
+function saveReminder(){
+  const value=$('reminderTime').value||'19:00';
+  if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(value)){ $('reminderStatus').textContent='Pick a valid time first.'; return; }
+  state.reminderTime=value;state.reminderEnabled=true;saveState();renderReminder();
+  $('reminderStatus').textContent=`Saved ❤️ Shazzy’s daily Italian time is ${value}.`;
+  scheduleReminderCheck();
+}
+async function requestNotifications(){
+  if(!('Notification' in window)){ $('reminderStatus').textContent='This browser does not support app notifications. Use the calendar reminder instead.'; return; }
+  const permission=await Notification.requestPermission();renderReminder();
+  $('reminderStatus').textContent=permission==='granted'?'Notifications allowed. Keep the calendar reminder too if you want it to work when the app is fully closed.':'Notification permission was not enabled. The calendar reminder still works.';
+}
+function disableReminder(){state.reminderEnabled=false;saveState();renderReminder()}
+function nextReminderDate(time){
+  const [h,m]=String(time||'19:00').split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);if(d<=new Date())d.setDate(d.getDate()+1);return d;
+}
+function pad2(n){return String(n).padStart(2,'0')}
+function icsLocal(dt){return `${dt.getFullYear()}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}T${pad2(dt.getHours())}${pad2(dt.getMinutes())}00`}
+function icsUtc(dt){return `${dt.getUTCFullYear()}${pad2(dt.getUTCMonth()+1)}${pad2(dt.getUTCDate())}T${pad2(dt.getUTCHours())}${pad2(dt.getUTCMinutes())}${pad2(dt.getUTCSeconds())}Z`}
+function downloadCalendarReminder(){
+  const time=$('reminderTime').value||state.reminderTime||'19:00';state.reminderTime=time;state.reminderEnabled=true;saveState();renderReminder();
+  const start=nextReminderDate(time);const uid=`shazzy-italian-${Date.now()}@italiano-con-shazzy`;
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Italiano con Shazzy//Daily Reminder//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${icsUtc(new Date())}`,`DTSTART:${icsLocal(start)}`,'RRULE:FREQ=DAILY','SUMMARY:Italiano con Shazzy 🇮🇹','DESCRIPTION:Five little minutes of Italian with Freddy ❤️','BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:Time for a little Italian 🇮🇹','END:VALARM','END:VEVENT','END:VCALENDAR'];
+  const blob=new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='shazzy-daily-italian-reminder.ics';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('reminderStatus').textContent='Calendar reminder created. Open the downloaded file and add it to her calendar.';
+}
+let reminderTimer=null;
+function scheduleReminderCheck(){
+  if(reminderTimer)clearInterval(reminderTimer);
+  const check=async()=>{
+    if(!state.reminderEnabled)return;const now=new Date();const nowTime=`${pad2(now.getHours())}:${pad2(now.getMinutes())}`;const today=localDateKey(now);
+    if(nowTime>=state.reminderTime && state.reminderLastSent!==today){
+      state.reminderLastSent=today;saveState();
+      if('Notification' in window && Notification.permission==='granted' && 'serviceWorker' in navigator){
+        try{const reg=await navigator.serviceWorker.ready;await reg.showNotification('Italiano con Shazzy 🇮🇹',{body:'Five little minutes of Italian with Freddy ❤️',icon:'icons/icon-192.png',badge:'icons/icon-192.png',tag:'shazzy-daily-italian'});}catch{}
+      }
+    }
+  };
+  check();reminderTimer=setInterval(check,30000);
+}
+function renderAll(){renderWelcome();renderTabs();renderPhrase();renderStats();renderQuiz();renderRescue();renderDailyLove();renderPractice();renderReminder()}
+
 
 $('hearBtn').addEventListener('click',()=>speak($('italianPhrase').textContent));
 $('revealBtn').addEventListener('click',()=>{const hidden=$('meaningPanel').classList.toggle('hidden');$('revealBtn').textContent=hidden?'Reveal meaning':'Hide meaning'});
@@ -339,6 +408,7 @@ $('saidBtn').addEventListener('click',()=>{
   if(state.mission<5){
     state.mission++;
     if((state.missionAwards||0)<state.mission){state.points+=5;state.missionAwards=(state.missionAwards||0)+1;}
+    if(state.mission===5 && state.lastMissionCompleteDate!==localDateKey()){state.missionsCompleted=(state.missionsCompleted||0)+1;state.lastMissionCompleteDate=localDateKey();}
   }
   state.categoriesUsed[state.category]=true;saveState();renderStats();
 });
@@ -359,7 +429,12 @@ $('restartPracticeBtn').addEventListener('click',()=>{state.practiceIndex=0;save
 $('clearBuildBtn').addEventListener('click',clearBuild);
 $('practiceInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkPractice()}});
 
-$('resetBtn').addEventListener('click',()=>{if(confirm('Reset ALL progress, points, streaks and achievements?')){state={...defaultState,lastOpen:localDateKey(),missionDate:localDateKey(),categoriesUsed:{},practiceWins:{}};saveState();renderAll()}});
+$('saveReminderBtn').addEventListener('click',saveReminder);
+$('notificationBtn').addEventListener('click',requestNotifications);
+$('calendarReminderBtn').addEventListener('click',downloadCalendarReminder);
+$('disableReminderBtn').addEventListener('click',disableReminder);
+
+$('resetBtn').addEventListener('click',()=>{if(confirm('Reset ALL progress, points, streaks and achievements?')){state={...defaultState,lastOpen:localDateKey(),missionDate:localDateKey(),categoriesUsed:{},practiceWins:{},quizWins:{}};saveState();renderAll()}});
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.remove('hidden')});
 $('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.add('hidden')});
 window.addEventListener('appinstalled',()=>{$('installBtn').classList.add('hidden')});
@@ -369,4 +444,4 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;window.location.reload()});
   window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{})});
 }
-updateStreak();renderAll();
+updateStreak();renderAll();scheduleReminderCheck();

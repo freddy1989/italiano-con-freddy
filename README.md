@@ -11,3 +11,7 @@ V4 adds:
 - More conversations and a Family lesson pack
 - Microphone scoring removed for now; listen-and-repeat remains
 - Existing local progress migrates automatically
+
+
+## V4.1
+Adds visible score rules, persistent achievements, one-time scoring per exercise, and a configurable daily reminder with browser-notification and repeating calendar reminder options.

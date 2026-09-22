@@ -39,7 +39,53 @@
       </div>
       <div class="progress-track"><div id="levelBar" class="progress-bar"></div></div>
       <p id="levelHint" class="muted">Every phrase counts. Next stop: Coraggiosa 💪</p>
+      <div class="achievement-headline">
+        <strong id="achievementSummary">0 / 12 achievements</strong>
+        <span class="muted">Unlock them as you practise</span>
+      </div>
       <div id="badgeList" class="badge-list" aria-label="Achievements"></div>
+    </section>
+
+
+
+    <section class="card score-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Points & achievements ⭐</p>
+          <h2>How Shazzy scores</h2>
+        </div>
+        <span id="scoreTotalPill" class="pill">0 pts</span>
+      </div>
+      <div class="score-grid">
+        <div><strong>+5</strong><span>Say a phrase</span><small>First 5 each day</small></div>
+        <div><strong>+10</strong><span>Conversation</span><small>First correct answer</small></div>
+        <div><strong>+15</strong><span>Write it</span><small>First correct sentence</small></div>
+        <div><strong>+10</strong><span>Missing word</span><small>First correct answer</small></div>
+        <div><strong>+12</strong><span>Build sentence</span><small>First correct build</small></div>
+      </div>
+      <p class="tiny-note">Repeating an exercise is always useful, but points are awarded once per exercise so the score reflects progress rather than button tapping.</p>
+    </section>
+
+    <section class="card reminder-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Daily Italian reminder 🔔</p>
+          <h2>Pick Shazzy’s practice time</h2>
+        </div>
+        <span id="reminderPill" class="pill">Off</span>
+      </div>
+      <div class="reminder-controls">
+        <label for="reminderTime">Remind me every day at</label>
+        <input id="reminderTime" type="time" value="19:00" />
+        <button id="saveReminderBtn" class="primary-btn" type="button">Save reminder</button>
+      </div>
+      <div class="reminder-actions">
+        <button id="notificationBtn" class="secondary-btn" type="button">🔔 Allow app notifications</button>
+        <button id="calendarReminderBtn" class="secondary-btn" type="button">📅 Add daily calendar reminder</button>
+        <button id="disableReminderBtn" class="text-btn" type="button">Turn reminder off</button>
+      </div>
+      <p id="reminderStatus" class="muted reminder-status" aria-live="polite">Choose a time and save it.</p>
+      <p class="tiny-note">For a reminder even when the web app is fully closed, add it to the phone calendar. Browser notifications are checked while the app is running.</p>
     </section>
 
     <section class="card daily-love">
@@ -190,7 +236,7 @@
     <footer>
       <button id="resetBtn" type="button" class="text-btn danger-link">Reset everything</button>
       <p>Made with love for Shazzy — from Freddy ❤️🇮🇹</p>
-      <p class="tiny">V4 • Practice Lab</p>
+      <p class="tiny">V4.1 • Scores, achievements & reminders</p>
     </footer>
   </main>
 
